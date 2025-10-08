@@ -1,0 +1,73 @@
+name: Build & Publish Package
+
+on:
+  # Build on branch pushes and PRs
+  push:
+    branches: ['*']
+  pull_request:
+    branches: [dev]
+  # Publish on version tag push (e.g., v1.0.0)
+  release:
+    types: [published]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    env:
+      MonoHome: ${{ github.workspace }}
+
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v3
+
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.12'
+
+      - name: Install Poetry
+        run: pip install poetry
+
+      - name: Install system dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y g++ make cmake python3-dev libeigen3-dev
+
+      - name: Install Python dependencies
+        run: poetry install --no-interaction --no-root
+
+      - name: Install dependencies
+        run: |
+          poetry install --with dev --no-interaction
+          pip install pybind11
+
+      - name: Build C++ extensions
+        run: |
+          poetry run make clean
+          poetry run make all
+
+      - name: Build package
+        run: poetry build
+
+  publish:
+    runs-on: ubuntu-latest
+    needs: build
+    if: github.event_name == 'release'  # Only run on release event
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v3
+
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.12'
+
+      - name: Install Poetry
+        run: |
+          curl -sSL https://install.python-poetry.org | python3 -
+          echo "${HOME}/.local/bin" >> $GITHUB_PATH
+
+      - name: Publish to PyPI
+        env:
+          POETRY_PYPI_TOKEN_PYPI: ${{ secrets.PYPI_API_TOKEN }}
+        run: poetry publish --no-interaction --username __token__ --password $POETRY_PYPI_TOKEN_PYPI

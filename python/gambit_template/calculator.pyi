@@ -1,0 +1,16 @@
+"""
+Calculator module
+"""
+from __future__ import annotations
+__all__: list[str] = ['Calculator']
+class Calculator:
+    def __init__(self) -> None:
+        ...
+    def add(self, x: float, y: float) -> float:
+        ...
+    def divide(self, x: float, y: float) -> float:
+        ...
+    def multiply(self, x: float, y: float) -> float:
+        ...
+    def subtract(self, x: float, y: float) -> float:
+        ...

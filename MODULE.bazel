@@ -1,0 +1,32 @@
+# MODULE.bazel
+module(name = "gaambit_template", version = "0.1.0")
+
+#CPP build
+bazel_dep(name = "rules_cc", version = "0.1.1")
+# External dependencies
+
+# Pybind11 for Python bindings
+python = use_extension("@rules_python//python/extensions:python.bzl", "python")
+python.toolchain(
+    python_version = "3.12",  # Match your system Python
+    is_default = True,
+)
+use_repo(python, "python_3_12")
+bazel_dep(name = "pybind11_bazel", version = "2.13.6")
+bazel_dep(name = "platforms", version = "1.0.0")
+bazel_dep(name = "rules_python", version = "1.5.1")
+
+#Eigen
+# bazel_dep(name = "eigen", version = "4.0.0-20241125.bcr.3")
+
+#clang-tidy
+# bazel_dep(name = "bazel_compdb", version = "0.5.1")
+
+# Override bazel_compdb with a legacy archive repo
+# bazel_dep(name = "rules_clang_tidy", version = "x.y.z") # Replace x.y.z with the actual version
+#CSPICE
+# local_repository = use_repo_rule("@bazel_tools//tools/build_defs/repo:local.bzl", "local_repository")
+# local_repository(
+#     name = "cspice",
+#     path = "third_party/cspice",
+# )

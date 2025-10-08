@@ -1,0 +1,37 @@
+[build-system]
+requires = ["setuptools>=61", "wheel", "setuptools_scm>=8.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "gambit-template"
+dynamic = ["version"]
+description = "Template Repo"
+authors = [
+  { name = "Aaron Berkhoff", email = "aaronberkhoff@outlook.com" }
+]
+readme = "README.md"
+requires-python = ">=3.12"
+
+dependencies = [
+  "numpy>=2.2.6,<3.0.0"
+]
+
+[project.optional-dependencies]
+dev = [
+  "pytest>=8.4.0",
+  "pytest-cov>=7.0.0",
+  "mypy>=1.16.0,<2.0.0",
+  "pylint>=3.3.7",
+  "black>=25.1.0",
+  "pre-commit>=4.2.0",
+  "pybind11==2.13.6",
+  "pybind11-stubgen>=2.5.5",
+  "setuptools >= 61",
+  "setuptools_scm>=8.0"
+]
+
+[tool.setuptools]
+packages = ["python/gambit_template"]  # underscore
+
+[tool.setuptools_scm]
+# Optional: customize version format
