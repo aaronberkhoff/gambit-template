@@ -1,0 +1,17 @@
+# BUILD.bazel (in project root)
+load("@rules_uv//uv:pip.bzl", "pip_compile")
+
+# This generates requirements_lock.txt from pyproject.toml
+pip_compile(
+    name = "requirements",
+    requirements_in = "//:pyproject.toml",
+    requirements_txt = "//:requirements_lock.txt",
+    # Override default args to exclude hash generation
+    args = [
+        "--emit-index-url",
+        "--no-strip-extras",
+        # Note: --generate-hashes is NOT included, so no hashes will be generated
+    ],
+)
+
+exports_files(["requirements_lock.txt"], visibility = ["//visibility:public"])

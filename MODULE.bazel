@@ -1,30 +1,45 @@
 # MODULE.bazel
-module(name = "gaambit_template", version = "0.1.0")
+module(name = "gambit_template", version = "0.1.0")
 
-#CPP build
+# C++ build
 bazel_dep(name = "rules_cc", version = "0.1.1")
-# External dependencies
 
-# Pybind11 for Python bindings
+# Python rules and toolchain
+bazel_dep(name = "rules_python", version = "1.6.0")
+
 python = use_extension("@rules_python//python/extensions:python.bzl", "python")
 python.toolchain(
-    python_version = "3.12",  # Match your system Python
+    python_version = "3.12",
     is_default = True,
 )
 use_repo(python, "python_3_12")
-bazel_dep(name = "pybind11_bazel", version = "2.13.6")
-bazel_dep(name = "platforms", version = "1.0.0")
-bazel_dep(name = "rules_python", version = "1.5.1")
 
-#Eigen
+# UV for fast dependency management
+bazel_dep(name = "rules_uv", version = "0.88.0")
+
+# Configure rules_python to read the UV-generated lock file
+pip = use_extension("@rules_python//python/extensions:pip.bzl", "pip")
+pip.parse(
+    hub_name = "gambit_pip_deps",
+    python_version = "3.12",
+    requirements_lock = "//:requirements_lock.txt",
+)
+use_repo(pip, "gambit_pip_deps")
+
+# Pybind11 for Python bindings
+bazel_dep(name = "pybind11_bazel", version = "2.13.6")
+
+# Platforms
+bazel_dep(name = "platforms", version = "1.0.0")
+
+# Eigen (uncomment if needed)
 # bazel_dep(name = "eigen", version = "4.0.0-20241125.bcr.3")
 
-#clang-tidy
+# Clang-tidy (uncomment if needed)
 # bazel_dep(name = "bazel_compdb", version = "0.5.1")
+# bazel_dep(name = "rules_clang_tidy", version = "x.y.z")
 
-# Override bazel_compdb with a legacy archive repo
-# bazel_dep(name = "rules_clang_tidy", version = "x.y.z") # Replace x.y.z with the actual version
-#CSPICE
+# CSPICE (uncomment if needed)
 # local_repository = use_repo_rule("@bazel_tools//tools/build_defs/repo:local.bzl", "local_repository")
 # local_repository(
 #     name = "cspice",

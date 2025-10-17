@@ -125,11 +125,11 @@ def generate_and_merge(module: str):
             shutil.copy2(new_stub, dest)
             print(f"Created new stub: {dest}")
 
-def main(args):
+def main(modules):
 
-    for module in args.modules:
+    for module in modules:
         generate_and_merge(module)
-        
+
     shutil.rmtree(STUB_TMP)
 
 if __name__ == "__main__":
@@ -143,4 +143,4 @@ if __name__ == "__main__":
     )
     args = parser.parse_args()
 
-    main(args)
+    main(args.modules)

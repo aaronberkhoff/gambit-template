@@ -1,0 +1,41 @@
+load("@rules_python//python:defs.bzl", "py_library")
+load("@rules_python//python:packaging.bzl", "py_wheel", "py_package")
+load("@gambit_pip_deps//:requirements.bzl", "requirement")
+
+py_library(
+    name = "gambit_template",
+    srcs = glob(["gambit_template/**/*.py"], allow_empty = True),
+    data = [
+        "//cpp:gambit_template",  # Bazel knows this produces a .so
+    ] + glob([
+        "gambit_template/**/*.pyi",
+        "gambit_template/py.typed",
+    ],
+    allow_empty = True,
+    ),
+    imports = ["python"],
+    visibility = ["//visibility:public"],
+    # Add Python dependencies managed by UV
+    deps = [
+        requirement("numpy"),
+        # Add other dependencies here as needed
+        # requirement("pandas"),
+        # requirement("scipy"),
+    ],
+)
+
+py_package(
+    name = "gambit_template_pkg",
+    packages = ["gambit_template"],
+    deps = [":gambit_template"],
+)
+
+py_wheel(
+    name = "gambit_template_wheel",
+    distribution = "gambit-template",
+    version = "0.1.0",
+    # Use the UV-generated lock file for requirements
+    # This automatically stays in sync with pyproject.toml
+    requires_file = "//:requirements_lock.txt",
+    deps = [":gambit_template_pkg"],
+)
