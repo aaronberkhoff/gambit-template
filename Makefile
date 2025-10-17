@@ -169,6 +169,17 @@ init: check-deps
 	bazel run //:requirements
 	@echo "Project initialized successfully"
 
+# ------------------------
+# Update template
+# ------------------------
+
+update-template:
+	@echo "🔄 Fetching latest changes from template (upstream)..."
+	git fetch upstream main
+	@echo "⚙️  Rebasing your project on top of template..."
+	git rebase upstream/main || (echo "⚠️ Rebase conflict! Resolve manually, then run 'git rebase --continue'"; exit 1)
+	@echo "✅ Template successfully merged!"
+
 # Help target
 help:
 	@echo "Gambit Template - Available Make Targets"
@@ -187,6 +198,7 @@ help:
 	@echo "  make dev          - Set up development environment with UV"
 	@echo "  make install      - Install built wheel locally"
 	@echo "  make install-dev  - Install in development mode"
+	@echo "  update_template   - Updates the upstream template
 	@echo ""
 	@echo "Quality:"
 	@echo "  make test         - Run tests with Bazel"
