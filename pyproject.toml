@@ -1,22 +1,21 @@
 [build-system]
-requires = ["setuptools>=61", "wheel", "setuptools_scm>=8.0"]
+requires = ["setuptools>=64", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
 name = "gambit-template"
-dynamic = ["version"]
-description = "Template Repo"
-authors = [
-  { name = "Aaron Berkhoff", email = "aaronberkhoff@outlook.com" }
-]
+version = "0.1.0"
 readme = "README.md"
 requires-python = ">=3.12"
-
 dependencies = [
-  "numpy>=2.2.6,<3.0.0"
+    "numpy>=2.3.4",
 ]
+description = "Template Repo"
+authors = [
+  { name = "Aaron Berkhoff", email = "aaronberkhoff@outlook.com" } ]
 
-[project.optional-dependencies]
+
+[dependency-groups]
 dev = [
   "pytest>=8.4.0",
   "pytest-cov>=7.0.0",
@@ -27,11 +26,22 @@ dev = [
   "pybind11==2.13.6",
   "pybind11-stubgen>=2.5.5",
   "setuptools >= 61",
-  "setuptools_scm>=8.0"
+  "setuptools_scm>=8.0",
+  "ruff>=0.14.0",
 ]
 
+# Setuptools configuration for editable installs
 [tool.setuptools]
-packages = ["python/gambit_template"]  # underscore
+package-dir = {"" = "python"}
 
-[tool.setuptools_scm]
-# Optional: customize version format
+[tool.setuptools.package-data]
+gambit_template = [
+    "*.so",       # Linux/Mac extension
+    "*.pyd",      # Windows extension
+    "*.pyi",      # Type stubs
+    "py.typed",   # PEP 561 marker
+]
+
+# This tells setuptools where to find packages
+[tool.setuptools.packages.find]
+where = ["python"]
